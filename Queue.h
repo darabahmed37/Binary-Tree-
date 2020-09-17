@@ -2,68 +2,85 @@
 // Created by darab on 15/9/20.
 //
 
-#ifndef QUEUE_QUEUE_H
-#define QUEUE_QUEUE_H
+#ifndef QUEUE_USING_LINKEDLIST_QUEUE_H
+#define QUEUE_USING_LINKEDLIST_QUEUE_H
 
 #include <iostream>
 
-template<class Data_Type_of_Queue>
+template<class T>
 class Queue {
 private:
-    int index = -1, size;
 
-    Data_Type_of_Queue *array;
+    class Node {
+        Node *next = nullptr;
+        T data;
+    public:
+
+
+        void setEx(Node *ex) {
+        }
+
+        Node *getNext() const {
+            return next;
+        }
+
+        void setNext(Node *next) {
+            Node::next = next;
+        }
+
+        T getData() const {
+            return data;
+        }
+
+        void setData(T data) {
+            Node::data = data;
+        }
+    };
+
+    Node *first = nullptr, *last = nullptr;
 public:
-    explicit Queue(int size) {
-        array = new Data_Type_of_Queue[size];
-        Queue<Data_Type_of_Queue>::size = size;
-    }
-
-    void enqueue(Data_Type_of_Queue D) {
-        array[++index] = D;
-
-    }
-
-    bool isFull() {
-        if (size - 1 == index) {
-            return true;
-        }
-        return false;
-    }
-
-    Data_Type_of_Queue dequeue() {
-        if (index >= 0) {
-            index--;
-            return array[index + 1];
-        }
-        std::cerr << "QueueUsingArray is empty Now " << std::endl;
-        return NULL;
-    }
-
-    Data_Type_of_Queue first() {
-        if (!isEmpty())
-            return array[0];
-        else return NULL;
-    }
-
-    Data_Type_of_Queue last() {
-        if (!isEmpty())
-
-            return array[index];
-        else return NULL;
-    }
-
     bool isEmpty() {
-        if (index == -1) {
+        if (first == nullptr&&last== nullptr)
             return true;
-
-        }
         return false;
     }
 
-    ~Queue() {
-        delete[]array;
+    void enqueue(T data) {
+        if (first == nullptr && last == nullptr) {
+            first = new Node;
+            last = first;
+            first->setData(data);
+            return;
+        }
+        last->setNext(new Node);
+        last = last->getNext();
+        last->setData(data);
+        last->setNext(nullptr);
+    }
+
+    T dequeue() {
+        if (first != nullptr ) {
+          if(first==last){
+              T d=first->getData();
+              first=first->getNext();
+              last=last->getNext();
+              first=last= nullptr;
+              return d;
+          }
+            Node *temp;
+            T data = first->getData();
+            temp = first;
+            first = first->getNext();
+            delete temp;
+            return data;
+        }
+        if (first == last) {
+
+            std::cerr << "\nNot more items avalible" << std::endl;
+
+            return nullptr;
+        }
     }
 };
 
-#endif //QUEUE_QUEUE_H
+#endif //QUEUE_USING_LINKEDLIST_QUEUE_H
